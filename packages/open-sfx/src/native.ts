@@ -1,0 +1,53 @@
+/**
+ * Native binding loader for `@wae/open-sfx`.
+ *
+ * The N-API module is the only implementation path. A missing binary produces
+ * an actionable error instead of silently degrading to a JS implementation.
+ */
+import { createRequire } from 'node:module';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const require = createRequire(import.meta.url);
+
+export interface RenderSfxResult {
+    out: string;
+    bytes: number;
+    family: string;
+}
+
+export interface NativeBinding {
+    version(): string;
+    listPresets(): string[];
+    renderSfx(options: { preset?: string; spec?: unknown; out: string }): RenderSfxResult;
+}
+
+const PLATFORM_PACKAGE = '@wae/open-sfx-win32-x64';
+
+function candidates(): string[] {
+    const override = process.env.OPEN_SFX_NATIVE;
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const local = path.resolve(here, '..', '..', 'open-sfx-win32-x64');
+    const packages = [PLATFORM_PACKAGE, local];
+    return override ? [override, ...packages] : packages;
+}
+
+function load(): NativeBinding {
+    const errors: string[] = [];
+    for (const candidate of candidates()) {
+        try {
+            return require(candidate) as NativeBinding;
+        }
+        catch (error) {
+            errors.push(`${candidate}: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
+    throw new Error(
+        `OpenSFX native binding is not available for ${os.platform()}-${os.arch()}.\n` +
+            `Set OPEN_SFX_NATIVE to a built .node file, or install ${PLATFORM_PACKAGE}.\n` +
+            `Tried:\n${errors.map((line) => `  - ${line}`).join('\n')}`,
+    );
+}
+
+export const native = load();

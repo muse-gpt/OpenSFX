@@ -1,0 +1,6 @@
+target/
+node_modules/
+out/
+*.wav
+dist/
+packages/open-sfx-win32-x64/*.node

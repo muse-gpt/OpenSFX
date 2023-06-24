@@ -1,0 +1,13 @@
+{
+    "name": "open-sfx-workspace",
+    "private": true,
+    "type": "module",
+    "packageManager": "pnpm@10.15.0",
+    "scripts": {
+        "build": "pnpm run build:napi && pnpm run build:ts",
+        "build:ts": "pnpm --filter @wae/open-sfx run build",
+        "build:napi": "cargo build -p opensfx-napi --release && node scripts/stage-native.mjs",
+        "typecheck": "pnpm --filter @wae/open-sfx run typecheck",
+        "pack": "cargo run -p opensfx --release --example render_pack -- ./out"
+    }
+}

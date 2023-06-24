@@ -1,0 +1,48 @@
+{
+    "name": "@wae/open-sfx",
+    "version": "0.0.1",
+    "description": "Procedural sound-effect library: deterministic synthesis, named presets, WAV export",
+    "license": "Apache-2.0",
+    "type": "module",
+    "bin": {
+        "open-sfx": "dist/cli.js"
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "License.md"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "keywords": [
+        "sound-effects",
+        "sfx",
+        "audio",
+        "wae"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nyar-os/OpenSFX.git",
+        "directory": "packages/open-sfx"
+    },
+    "optionalDependencies": {
+        "@wae/open-sfx-win32-x64": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/node": "^22.20.4",
+        "typescript": "^5.9.2"
+    }
+}
