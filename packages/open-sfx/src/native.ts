@@ -8,19 +8,20 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type { Family } from './index.js';
 
 const require = createRequire(import.meta.url);
 
 export interface RenderSfxResult {
     out: string;
     bytes: number;
-    family: string;
+    family: Family;
 }
 
 export interface NativeBinding {
     version(): string;
     listPresets(): string[];
-    renderSfx(options: { preset?: string; spec?: unknown; out: string }): RenderSfxResult;
+    renderSfx(options: { preset?: string; spec?: string; out: string }): RenderSfxResult;
 }
 
 const PLATFORM_PACKAGE = '@wae/open-sfx-win32-x64';

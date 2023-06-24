@@ -12,6 +12,8 @@ description = "Node-API surface for OpenSFX"
 crate-type = ["cdylib"]
 
 [dependencies]
-opensfx = { workspace = true }
+media-synthesis = { workspace = true }
+media-render = { workspace = true }
+media-types = { workspace = true }
 serde_json = { workspace = true }
 wae = { workspace = true }

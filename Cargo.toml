@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
-members = ["crates/opensfx", "crates/napi"]
-default-members = ["crates/opensfx", "crates/napi"]
+members = ["crates/napi"]
+default-members = ["crates/napi"]
 
 [workspace.package]
 version = "0.0.1"
@@ -12,16 +12,15 @@ authors = ["OpenSFX Authors"]
 repository = "https://github.com/nyar-os/OpenSFX"
 
 [workspace.dependencies]
-serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # Cross-repo git dependencies must pin the full 40-character revision.
 wae = { git = "https://github.com/doki-land/wae-framework.git", rev = "66f5d003fec85e28503968fd0a6a271beef0f389" }
-# The media library owns WAV writing and the shared sample rate. Local
-# development resolves it by path; the published revision to pin is
-# 371e65be511acab0cfbc4356d60ccca8384c329c.
-media = { path = "../../多媒体研究/media.rs/projects/media/media" }
-geometry = { path = "../../多媒体研究/media.rs/projects/geometry/geometry" }
-opensfx = { path = "crates/opensfx" }
+# The synthesis domain, the scene-free sfx export entry and the shared sample
+# rate live in the media.rs tree. Local development resolves them by path; the
+# formal git rev pin belongs to the release gate, not to a comment here.
+media-synthesis = { path = "../../多媒体研究/media.rs/projects/media/media.synthesis" }
+media-render = { path = "../../多媒体研究/media.rs/projects/media/media.render", default-features = false, features = ["sfx-export"] }
+media-types = { path = "../../多媒体研究/media.rs/projects/media/media.types" }
 
 [profile.release]
 lto = true
