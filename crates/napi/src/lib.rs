@@ -16,7 +16,10 @@
 
 #![deny(missing_docs)]
 
-use media_synthesis::{SfxSpec, preset, preset_names};
+use media_synthesis::{
+    DrumPattern, Instrument, InstrumentSpec, instrument_preset, instrument_preset_names, pattern_preset,
+    pattern_preset_names, preset, preset_names, SfxSpec,
+};
 use media_types::SAMPLE_RATE;
 use wae::{CallContext, Env, Error, JsValue, Result, function, register_module};
 
@@ -35,6 +38,125 @@ fn list_presets(ctx: CallContext) -> Result<JsValue> {
         array.set_element(index as u32, ctx.env().string(name)?)?;
     }
     Ok(array)
+}
+
+/// Every playable instrument name, in upstream order.
+#[function(js_name = "listInstruments")]
+fn list_instruments(ctx: CallContext) -> Result<JsValue> {
+    let array = ctx.env().array_with_length(Instrument::ALL.len())?;
+    for (index, instrument) in Instrument::ALL.iter().enumerate() {
+        array.set_element(index as u32, ctx.env().string(instrument.as_str())?)?;
+    }
+    Ok(array)
+}
+
+/// Every shipped instrument preset name, in upstream catalogue order.
+#[function(js_name = "listInstrumentPresets")]
+fn list_instrument_presets(ctx: CallContext) -> Result<JsValue> {
+    let names = instrument_preset_names();
+    let array = ctx.env().array_with_length(names.len())?;
+    for (index, name) in names.iter().enumerate() {
+        array.set_element(index as u32, ctx.env().string(name)?)?;
+    }
+    Ok(array)
+}
+
+/// Every shipped drum-groove preset name, in upstream catalogue order.
+#[function(js_name = "listPatterns")]
+fn list_patterns(ctx: CallContext) -> Result<JsValue> {
+    let names = pattern_preset_names();
+    let array = ctx.env().array_with_length(names.len())?;
+    for (index, name) in names.iter().enumerate() {
+        array.set_element(index as u32, ctx.env().string(name)?)?;
+    }
+    Ok(array)
+}
+
+/// Renders one instrument preset or instrument spec into a WAV file.
+///
+/// Argument: `{ out: string, preset?: string, spec?: string }` — exactly one
+/// of the two. Spec JSON follows the upstream `InstrumentSpec` shape
+/// (kebab-case `instrument`, camelCase fields).
+#[function(js_name = "renderInstrument")]
+fn render_instrument(ctx: CallContext) -> Result<JsValue> {
+    let arg = ctx
+        .args()
+        .first()
+        .copied()
+        .ok_or_else(|| Error::new("renderInstrument requires an options object"))?;
+    let out = arg.get_named("out")?.as_string()?;
+    let spec = match (optional_string(&arg, "preset")?, optional_string(&arg, "spec")?) {
+        (Some(name), None) => instrument_preset(&name).ok_or_else(|| {
+            map_domain_error(media_types::Error::invalid_input(format!("unknown instrument preset: {name}")))
+        })?,
+        (None, Some(json)) => serde_json::from_str::<InstrumentSpec>(&json)
+            .map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?,
+        (Some(_), Some(_)) => {
+            return Err(map_domain_error(media_types::Error::invalid_input(
+                "provide either preset or spec, not both",
+            )));
+        }
+        (None, None) => {
+            return Err(map_domain_error(media_types::Error::invalid_input(
+                "renderInstrument requires either a preset name or a spec JSON",
+            )));
+        }
+    };
+    prepare_parent(&out)?;
+    media_render::write_instrument(&spec, &out, SAMPLE_RATE).map_err(map_domain_error)?;
+    let bytes = std::fs::metadata(&out).map(|m| m.len()).unwrap_or(0);
+    json_to_js(
+        ctx.env(),
+        &serde_json::json!({ "out": out, "bytes": bytes, "instrument": spec.instrument.as_str() }),
+    )
+}
+
+/// Renders one drum-groove preset or groove spec into a WAV file.
+///
+/// Argument: `{ out: string, preset?: string, spec?: string }` — exactly one
+/// of the two. Spec JSON follows the upstream `DrumPattern` shape.
+#[function(js_name = "renderPattern")]
+fn render_pattern(ctx: CallContext) -> Result<JsValue> {
+    let arg = ctx
+        .args()
+        .first()
+        .copied()
+        .ok_or_else(|| Error::new("renderPattern requires an options object"))?;
+    let out = arg.get_named("out")?.as_string()?;
+    let pattern = match (optional_string(&arg, "preset")?, optional_string(&arg, "spec")?) {
+        (Some(name), None) => pattern_preset(&name).ok_or_else(|| {
+            map_domain_error(media_types::Error::invalid_input(format!("unknown pattern preset: {name}")))
+        })?,
+        (None, Some(json)) => serde_json::from_str::<DrumPattern>(&json)
+            .map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?,
+        (Some(_), Some(_)) => {
+            return Err(map_domain_error(media_types::Error::invalid_input(
+                "provide either preset or spec, not both",
+            )));
+        }
+        (None, None) => {
+            return Err(map_domain_error(media_types::Error::invalid_input(
+                "renderPattern requires either a preset name or a spec JSON",
+            )));
+        }
+    };
+    prepare_parent(&out)?;
+    media_render::write_pattern(&pattern, &out, SAMPLE_RATE).map_err(map_domain_error)?;
+    let bytes = std::fs::metadata(&out).map(|m| m.len()).unwrap_or(0);
+    json_to_js(
+        ctx.env(),
+        &serde_json::json!({ "out": out, "bytes": bytes, "bpm": pattern.bpm, "seconds": pattern.duration_seconds() }),
+    )
+}
+
+fn prepare_parent(out: &str) -> Result<()> {
+    if let Some(parent) = std::path::Path::new(out).parent() {
+        if !parent.as_os_str().is_empty() {
+            std::fs::create_dir_all(parent)
+                .map_err(|e| Error::new(format!("cannot create output directory: {e}")))?;
+        }
+    }
+    Ok(())
 }
 
 /// Renders a spec or preset into a WAV file.
@@ -147,4 +269,13 @@ fn json_to_js(env: Env, value: &serde_json::Value) -> Result<JsValue> {
     }
 }
 
-register_module![version, list_presets, render_sfx];
+register_module![
+    version,
+    list_presets,
+    list_instruments,
+    list_instrument_presets,
+    list_patterns,
+    render_sfx,
+    render_instrument,
+    render_pattern
+];

@@ -18,10 +18,28 @@ export interface RenderSfxResult {
     family: Family;
 }
 
+export interface RenderInstrumentResult {
+    out: string;
+    bytes: number;
+    instrument: string;
+}
+
+export interface RenderPatternResult {
+    out: string;
+    bytes: number;
+    bpm: number;
+    seconds: number;
+}
+
 export interface NativeBinding {
     version(): string;
     listPresets(): string[];
+    listInstruments(): string[];
+    listInstrumentPresets(): string[];
+    listPatterns(): string[];
     renderSfx(options: { preset?: string; spec?: string; out: string }): RenderSfxResult;
+    renderInstrument(options: { preset?: string; spec?: string; out: string }): RenderInstrumentResult;
+    renderPattern(options: { preset?: string; spec?: string; out: string }): RenderPatternResult;
 }
 
 const PLATFORM_PACKAGE = '@wae/open-sfx-win32-x64';

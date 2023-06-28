@@ -73,3 +73,103 @@ export function listPresets(): string[] {
 export function nativeVersion(): string {
     return native.version();
 }
+
+/** Every playable instrument name (drums and pitched instruments). */
+export type Instrument =
+    | 'kick'
+    | 'snare'
+    | 'clap'
+    | 'hat-closed'
+    | 'hat-open'
+    | 'tom'
+    | 'rim'
+    | 'shaker'
+    | 'crash'
+    | 'bass'
+    | 'pluck'
+    | 'pad'
+    | 'lead'
+    | 'bell'
+    | 'marimba'
+    | 'keys'
+    | 'strings';
+
+/** One instrument hit; `note` is a MIDI number (A4 = 69). */
+export interface InstrumentSpec {
+    instrument: Instrument;
+    duration: number;
+    note?: number;
+    seed?: number;
+    /** Tail length, 0 tight … 1 long; within 0..1. */
+    decay?: number;
+    /** Brightness, 0 dark … 1 bright; within 0..1. */
+    tone?: number;
+    gain?: number;
+    pan?: number;
+}
+
+/** One groove track: step velocities, 0 is a rest. */
+export interface PatternTrack {
+    instrument: Instrument;
+    steps: number[];
+    note?: number;
+    tone?: number;
+    decay?: number;
+    pan?: number;
+}
+
+/** One renderable groove. */
+export interface DrumPattern {
+    bpm: number;
+    stepsPerBar?: number;
+    bars?: number;
+    tracks: PatternTrack[];
+}
+
+export interface RenderedInstrument {
+    out: string;
+    bytes: number;
+    instrument: string;
+}
+
+export interface RenderedPattern {
+    out: string;
+    bytes: number;
+    bpm: number;
+    seconds: number;
+}
+
+/** Renders one instrument hit spec into a WAV at `out`. */
+export function renderInstrument(spec: InstrumentSpec, out: string): RenderedInstrument {
+    return native.renderInstrument({ spec: JSON.stringify(spec), out });
+}
+
+/** Renders a shipped instrument preset by name into a WAV at `out`. */
+export function renderInstrumentPreset(preset: string, out: string): RenderedInstrument {
+    return native.renderInstrument({ preset, out });
+}
+
+/** Renders one groove spec into a WAV at `out`. */
+export function renderPattern(spec: DrumPattern, out: string): RenderedPattern {
+    return native.renderPattern({ spec: JSON.stringify(spec), out });
+}
+
+/** Renders a shipped groove preset by name into a WAV at `out`. */
+export function renderPatternPreset(preset: string, out: string): RenderedPattern {
+    return native.renderPattern({ preset, out });
+}
+
+/** Every instrument name, in catalogue order. */
+export function listInstruments(): string[] {
+    return native.listInstruments();
+}
+
+/** Every shipped instrument preset name. */
+export function listInstrumentPresets(): string[] {
+    return native.listInstrumentPresets();
+}
+
+/** Every shipped drum-groove preset name. */
+export function listPatterns(): string[] {
+    return native.listPatterns();
+}
