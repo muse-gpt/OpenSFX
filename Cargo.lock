@@ -36,6 +36,7 @@ dependencies = [
 [[package]]
 name = "geometry-types"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 dependencies = [
  "serde",
 ]
@@ -65,6 +66,7 @@ dependencies = [
 [[package]]
 name = "media-codec"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 dependencies = [
  "media-image",
  "media-types",
@@ -74,10 +76,12 @@ dependencies = [
 [[package]]
 name = "media-dsp"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 
 [[package]]
 name = "media-image"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 dependencies = [
  "geometry-types",
  "serde",
@@ -86,6 +90,7 @@ dependencies = [
 [[package]]
 name = "media-render"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 dependencies = [
  "media-codec",
  "media-image",
@@ -97,6 +102,7 @@ dependencies = [
 [[package]]
 name = "media-synthesis"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 dependencies = [
  "media-dsp",
  "media-types",
@@ -106,6 +112,7 @@ dependencies = [
 [[package]]
 name = "media-types"
 version = "0.0.0"
+source = "git+https://github.com/muse-gpt/ucf.rs.git?rev=36015678136f9d755ec62651902d2d27f2bb2611#36015678136f9d755ec62651902d2d27f2bb2611"
 
 [[package]]
 name = "memchr"
