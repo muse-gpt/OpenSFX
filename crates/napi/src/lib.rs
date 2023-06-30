@@ -89,8 +89,7 @@ fn render_instrument(ctx: CallContext) -> Result<JsValue> {
         (Some(name), None) => instrument_preset(&name).ok_or_else(|| {
             map_domain_error(media_types::Error::invalid_input(format!("unknown instrument preset: {name}")))
         })?,
-        (None, Some(json)) => serde_json::from_str::<InstrumentSpec>(&json)
-            .map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?,
+        (None, Some(json)) => serde_json::from_value::<InstrumentSpec>(domain_value(&json)?).map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?,
         (Some(_), Some(_)) => {
             return Err(map_domain_error(media_types::Error::invalid_input(
                 "provide either preset or spec, not both",
@@ -127,8 +126,7 @@ fn render_pattern(ctx: CallContext) -> Result<JsValue> {
         (Some(name), None) => pattern_preset(&name).ok_or_else(|| {
             map_domain_error(media_types::Error::invalid_input(format!("unknown pattern preset: {name}")))
         })?,
-        (None, Some(json)) => serde_json::from_str::<DrumPattern>(&json)
-            .map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?,
+        (None, Some(json)) => serde_json::from_value::<DrumPattern>(domain_value(&json)?).map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?,
         (Some(_), Some(_)) => {
             return Err(map_domain_error(media_types::Error::invalid_input(
                 "provide either preset or spec, not both",
@@ -163,13 +161,12 @@ fn prepare_parent(out: &str) -> Result<()> {
 ///
 /// Argument: `{ out: string, preset?: string, spec?: string }` — exactly one
 /// of `preset` (a catalogue name resolved by `media.synthesis`) or `spec`
-/// (JSON in the `media.synthesis` spec shape: kebab-case `family`, camelCase
-/// fields, `seed` defaulting to 1) is required. Unknown preset names, unknown
-/// families, missing or out-of-range parameters, non-finite values and
-/// malformed JSON reject with the stable `invalid_input:` prefix; output
-/// directory and write failures keep their `io:` code. The sample rate is the
-/// project default from `media.types`, passed explicitly — hosts cannot pick
-/// another rate through this binding.
+/// (JSON with JS-style camelCase keys, mapped to the domain's snake_case
+/// fields by this binding). Unknown preset names, unknown families, missing
+/// or out-of-range parameters, non-finite values and malformed JSON reject
+/// with the stable `invalid_input:` prefix; output directory and write
+/// failures keep their `io:` code. The sample rate is the project default from
+/// `media.types`, passed explicitly — hosts cannot pick another rate here.
 #[function(js_name = "renderSfx")]
 fn render_sfx(ctx: CallContext) -> Result<JsValue> {
     let arg = ctx
@@ -209,7 +206,7 @@ fn resolve_spec(arg: &JsValue) -> Result<SfxSpec> {
         (Some(name), None) => preset(&name).ok_or_else(|| {
             map_domain_error(media_types::Error::invalid_input(format!("unknown preset: {name}")))
         }),
-        (None, Some(json)) => serde_json::from_str::<SfxSpec>(&json).map_err(|e| {
+        (None, Some(json)) => serde_json::from_value::<SfxSpec>(domain_value(&json)?).map_err(|e| {
             map_domain_error(media_types::Error::invalid_input(format!("spec: {e}")))
         }),
         (Some(_), Some(_)) => Err(map_domain_error(media_types::Error::invalid_input(
@@ -231,6 +228,41 @@ fn optional_string(object: &JsValue, name: &str) -> Result<Option<String>> {
     value.as_string().map(Some).map_err(|_| {
         map_domain_error(media_types::Error::invalid_input(format!("{name}: expected a string")))
     })
+}
+
+/// Parses JS-style JSON into the domain wire shape.
+///
+/// The media.rs contract is Rust snake_case; the TypeScript authoring surface
+/// is camelCase. That translation is this binding's job and happens here, at
+/// the only place JS values enter the domain — the Rust domain keeps its
+/// native field names for every other language binding.
+fn domain_value(raw: &str) -> Result<serde_json::Value> {
+    let value: serde_json::Value = serde_json::from_str(raw)
+        .map_err(|e| map_domain_error(media_types::Error::invalid_input(format!("spec: {e}"))))?;
+    Ok(snake_keys(value))
+}
+
+fn snake_keys(value: serde_json::Value) -> serde_json::Value {
+    match value {
+        serde_json::Value::Object(map) => serde_json::Value::Object(
+            map.into_iter().map(|(key, inner)| (camel_to_snake(&key), snake_keys(inner))).collect(),
+        ),
+        serde_json::Value::Array(items) => serde_json::Value::Array(items.into_iter().map(snake_keys).collect()),
+        other => other,
+    }
+}
+
+fn camel_to_snake(key: &str) -> String {
+    let mut out = String::with_capacity(key.len() + 4);
+    for letter in key.chars() {
+        if letter.is_ascii_uppercase() {
+            out.push('_');
+            out.push(letter.to_ascii_lowercase());
+        } else {
+            out.push(letter);
+        }
+    }
+    out
 }
 
 /// Maps a `media.types` domain error onto a host error, keeping the stable
