@@ -5,7 +5,7 @@
     "license": "Apache-2.0",
     "type": "module",
     "bin": {
-        "open-sfx": "dist/cli.js"
+        "open-sfx": "dist/cli/main.js"
     },
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -17,6 +17,7 @@
     },
     "files": [
         "dist",
+        "locales",
         "README.md",
         "License.md"
     ],
@@ -40,6 +41,9 @@
     },
     "optionalDependencies": {
         "@wae/open-sfx-win32-x64": "workspace:*"
+    },
+    "dependencies": {
+        "@wae/commander": "^0.0.6"
     },
     "devDependencies": {
         "@types/node": "^22.20.4",
