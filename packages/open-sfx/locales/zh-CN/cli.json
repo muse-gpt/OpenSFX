@@ -6,5 +6,6 @@
   "cli.cmd.instruments": "列出可演奏乐器",
   "cli.cmd.instrument": "渲染一个乐器预设为 WAV（位置参数：<preset> <out.wav>）",
   "cli.cmd.patterns": "列出鼓组节奏型预设",
-  "cli.cmd.pattern": "渲染一个鼓组节奏型为 WAV（位置参数：<preset> <out.wav>）"
+  "cli.cmd.pattern": "渲染一个鼓组节奏型为 WAV（位置参数：<preset> <out.wav>）",
+  "cli.opt.spec": "从 JSON spec 文件读取参数，而不是预设名"
 }
