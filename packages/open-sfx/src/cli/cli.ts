@@ -10,6 +10,7 @@ import { registerPackCommand } from './commands/pack-cmd.js';
 import { registerPatternCommand } from './commands/pattern-cmd.js';
 import { registerPatternsCommand } from './commands/patterns-cmd.js';
 import { registerRenderCommand } from './commands/render-cmd.js';
+import { registerVersionCommand } from './commands/version-cmd.js';
 
 export function localesRoot(): string {
     return join(dirname(fileURLToPath(import.meta.url)), '../../locales');
@@ -28,6 +29,7 @@ export function buildSfxCli() {
     registerInstrumentCommand(cli);
     registerPatternsCommand(cli);
     registerPatternCommand(cli);
+    registerVersionCommand(cli);
 
     return cli;
 }
