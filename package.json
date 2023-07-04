@@ -6,8 +6,9 @@
     "scripts": {
         "build": "pnpm run build:napi && pnpm run build:ts",
         "build:ts": "pnpm --filter @wae/open-sfx run build",
-        "build:napi": "cargo build -p opensfx-napi --release && node scripts/stage-native.mjs",
+        "build:napi": "node scripts/build-napi.mjs",
         "typecheck": "pnpm --filter @wae/open-sfx run typecheck",
-        "pack": "pnpm run build && node packages/open-sfx/dist/cli.js pack ./out"
+        "verify": "node scripts/verify-install.mjs",
+        "pack": "pnpm run build && node packages/open-sfx/dist/cli/main.js pack ./out"
     }
 }

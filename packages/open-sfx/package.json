@@ -17,9 +17,7 @@
     },
     "files": [
         "dist",
-        "locales",
-        "README.md",
-        "License.md"
+        "locales"
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
@@ -36,10 +34,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/nyar-os/OpenSFX.git",
+        "url": "git+https://github.com/muse-gpt/OpenSFX.git",
         "directory": "packages/open-sfx"
     },
     "optionalDependencies": {
+        "@wae/open-sfx-darwin-arm64": "workspace:*",
+        "@wae/open-sfx-darwin-x64": "workspace:*",
+        "@wae/open-sfx-linux-arm64": "workspace:*",
+        "@wae/open-sfx-linux-x64": "workspace:*",
         "@wae/open-sfx-win32-x64": "workspace:*"
     },
     "dependencies": {

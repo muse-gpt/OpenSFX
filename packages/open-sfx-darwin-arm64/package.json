@@ -1,0 +1,21 @@
+{
+    "name": "@wae/open-sfx-darwin-arm64",
+    "version": "0.0.1",
+    "description": "OpenSFX native addon for macOS Apple Silicon",
+    "license": "Apache-2.0",
+    "os": ["darwin"],
+    "cpu": ["arm64"],
+    "main": "./open-sfx.darwin-arm64.node",
+    "files": [
+        "open-sfx.darwin-arm64.node",
+        "README.md"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/muse-gpt/OpenSFX.git",
+        "directory": "packages/open-sfx-darwin-arm64"
+    }
+}

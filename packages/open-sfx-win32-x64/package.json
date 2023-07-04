@@ -8,7 +8,14 @@
     "main": "./open-sfx.win32-x64.node",
     "files": [
         "open-sfx.win32-x64.node",
-        "README.md",
-        "License.md"
-    ]
+        "README.md"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/muse-gpt/OpenSFX.git",
+        "directory": "packages/open-sfx-win32-x64"
+    }
 }
