@@ -8,6 +8,7 @@
   "cli.cmd.patterns": "List the drum-groove presets",
   "cli.cmd.pattern": "Render one drum groove to a WAV (positional: <preset> <out.wav>)",
   "cli.cmd.version": "Print the native library version",
+  "cli.cmd.verify": "Render one preset to a temporary WAV and check container, rate and audibility (positional: <preset>)",
   "cli.opt.spec": "Read a JSON spec file instead of a preset name",
   "cli.opt.json": "Print the result as JSON"
 }

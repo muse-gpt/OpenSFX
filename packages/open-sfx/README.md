@@ -10,7 +10,7 @@ Facade for procedural sound effects, instruments, and drum grooves. Import this 
 | `renderInstrument` / `renderInstrumentPreset` / `listInstruments` | Single instrument hits |
 | `renderPattern` / `renderPatternPreset` / `listPatterns` | Drum grooves |
 | `nativeVersion` | Native library version string |
-| `open-sfx` CLI | `list`, `render`, `pack`, `instruments`, `instrument`, `patterns`, `pattern` |
+| `open-sfx` CLI | `list`, `render`, `pack`, `instruments`, `instrument`, `patterns`, `pattern`, `verify`, `version` |
 
 ## Example
 

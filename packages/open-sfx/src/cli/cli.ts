@@ -11,6 +11,7 @@ import { registerPatternCommand } from './commands/pattern-cmd.js';
 import { registerPatternsCommand } from './commands/patterns-cmd.js';
 import { registerRenderCommand } from './commands/render-cmd.js';
 import { registerVersionCommand } from './commands/version-cmd.js';
+import { registerVerifyCommand } from './commands/verify-cmd.js';
 
 export function localesRoot(): string {
     return join(dirname(fileURLToPath(import.meta.url)), '../../locales');
@@ -30,6 +31,7 @@ export function buildSfxCli() {
     registerPatternsCommand(cli);
     registerPatternCommand(cli);
     registerVersionCommand(cli);
+    registerVerifyCommand(cli);
 
     return cli;
 }
