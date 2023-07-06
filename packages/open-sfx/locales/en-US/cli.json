@@ -2,7 +2,7 @@
   "cli.intro": "open-sfx — procedural sound-effect library and CLI",
   "cli.cmd.list": "List the shipped sound-effect presets",
   "cli.cmd.render": "Render one preset to a WAV (positional: <preset> <out.wav>)",
-  "cli.cmd.pack": "Render the whole preset catalogue into a directory (positional: <dir>)",
+  "cli.cmd.pack": "Render the whole preset catalogue into a directory and write manifest.json with sizes and fingerprints (positional: <dir>)",
   "cli.cmd.instruments": "List the playable instruments",
   "cli.cmd.instrument": "Render one instrument preset to a WAV (positional: <preset> <out.wav>)",
   "cli.cmd.patterns": "List the drum-groove presets",
