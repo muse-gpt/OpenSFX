@@ -17,18 +17,21 @@ export type PlatformKey = 'win32-x64' | 'linux-x64' | 'darwin-x64' | 'darwin-arm
 export interface RenderSfxResult {
     out: string;
     bytes: number;
+    fingerprint: string;
     family: Family;
 }
 
 export interface RenderInstrumentResult {
     out: string;
     bytes: number;
+    fingerprint: string;
     instrument: string;
 }
 
 export interface RenderPatternResult {
     out: string;
     bytes: number;
+    fingerprint: string;
     bpm: number;
     seconds: number;
 }

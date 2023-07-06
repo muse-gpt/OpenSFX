@@ -39,6 +39,8 @@ export interface SfxSpec {
 export interface RenderedSfx {
     out: string;
     bytes: number;
+    /** FNV-1a of the written WAV bytes; equal specs and seeds produce equal ids. */
+    fingerprint: string;
     /** Kebab-case family name — the same spelling the spec is written with. */
     family: Family;
 }
@@ -129,12 +131,16 @@ export interface DrumPattern {
 export interface RenderedInstrument {
     out: string;
     bytes: number;
+    /** FNV-1a of the written WAV bytes; equal specs and seeds produce equal ids. */
+    fingerprint: string;
     instrument: string;
 }
 
 export interface RenderedPattern {
     out: string;
     bytes: number;
+    /** FNV-1a of the written WAV bytes; equal specs and seeds produce equal ids. */
+    fingerprint: string;
     bpm: number;
     seconds: number;
 }

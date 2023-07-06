@@ -31,6 +31,7 @@ export function registerRenderCommand(cli: Cli): void {
 export interface Emittable {
     out: string;
     bytes: number;
+    fingerprint: string;
     family?: string;
     instrument?: string;
     bpm?: number;
@@ -46,6 +47,7 @@ export function emit(options: Record<string, unknown>, run: () => Emittable): nu
         }
         else {
             console.log(`${result.out} ${result.bytes} bytes${describe(result)}`);
+            console.log(`fingerprint: ${result.fingerprint}`);
         }
         return 0;
     }

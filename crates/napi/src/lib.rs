@@ -103,10 +103,15 @@ fn render_instrument(ctx: CallContext) -> Result<JsValue> {
     };
     prepare_parent(&out)?;
     media_render::write_instrument(&spec, &out, SAMPLE_RATE).map_err(map_domain_error)?;
-    let bytes = std::fs::metadata(&out).map(|m| m.len()).unwrap_or(0);
+    let written = read_back(&out)?;
     json_to_js(
         ctx.env(),
-        &serde_json::json!({ "out": out, "bytes": bytes, "instrument": spec.instrument.as_str() }),
+        &serde_json::json!({
+            "out": out,
+            "bytes": written.len() as u64,
+            "fingerprint": fnv1a(&written),
+            "instrument": spec.instrument.as_str(),
+        }),
     )
 }
 
@@ -140,11 +145,33 @@ fn render_pattern(ctx: CallContext) -> Result<JsValue> {
     };
     prepare_parent(&out)?;
     media_render::write_pattern(&pattern, &out, SAMPLE_RATE).map_err(map_domain_error)?;
-    let bytes = std::fs::metadata(&out).map(|m| m.len()).unwrap_or(0);
+    let written = read_back(&out)?;
     json_to_js(
         ctx.env(),
-        &serde_json::json!({ "out": out, "bytes": bytes, "bpm": pattern.bpm, "seconds": pattern.duration_seconds() }),
+        &serde_json::json!({
+            "out": out,
+            "bytes": written.len() as u64,
+            "fingerprint": fnv1a(&written),
+            "bpm": pattern.bpm,
+            "seconds": pattern.duration_seconds(),
+        }),
     )
+}
+
+/// Reads the written file back so `bytes` and `fingerprint` describe the exact
+/// asset on disk rather than the request that produced it.
+fn read_back(out: &str) -> Result<Vec<u8>> {
+    std::fs::read(out).map_err(|e| Error::new(format!("cannot read back {out}: {e}")))
+}
+
+/// FNV-1a 64 of the written file, in the same `016x` form as the other hashes.
+fn fnv1a(bytes: &[u8]) -> String {
+    let mut state = 0xcbf2_9ce4_8422_2325_u64;
+    for byte in bytes {
+        state ^= u64::from(*byte);
+        state = state.wrapping_mul(0x0000_0100_0000_01b3);
+    }
+    format!("{state:016x}")
 }
 
 fn prepare_parent(out: &str) -> Result<()> {
@@ -186,10 +213,11 @@ fn render_sfx(ctx: CallContext) -> Result<JsValue> {
 
     media_render::write_sfx(&spec, &out, SAMPLE_RATE).map_err(map_domain_error)?;
 
-    let bytes = std::fs::metadata(&out).map(|m| m.len()).unwrap_or(0);
+    let written = read_back(&out)?;
     let value = serde_json::json!({
         "out": out,
-        "bytes": bytes,
+        "bytes": written.len() as u64,
+        "fingerprint": fnv1a(&written),
         "family": spec.family.as_str(),
     });
     json_to_js(ctx.env(), &value)

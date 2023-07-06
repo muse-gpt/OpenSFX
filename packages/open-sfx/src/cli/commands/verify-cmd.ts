@@ -17,8 +17,8 @@ interface Check {
  * Renders one preset into a temporary WAV and checks the delivery facts.
  *
  * The file is deleted afterwards, so this is a gate rather than an export:
- * container, channel count, sample rate and audibility. Use `render` when the
- * WAV itself is the deliverable.
+ * container, channel count, sample rate, audibility and byte-for-byte
+ * reproducibility. Use `render` when the WAV itself is the deliverable.
  */
 export function registerVerifyCommand(cli: Cli): void {
     cli.command('verify', 'cli.cmd.verify')
@@ -27,8 +27,10 @@ export function registerVerifyCommand(cli: Cli): void {
             const preset = typeof options._[0] === 'string' ? options._[0] : 'tick-clean';
             const dir = mkdtempSync(join(tmpdir(), 'open-sfx-verify-'));
             const out = join(dir, 'verify.wav');
+            const repeat = join(dir, 'verify-repeat.wav');
             try {
                 const result = renderPreset(preset, out);
+                const again = renderPreset(preset, repeat);
                 const wav = readFileSync(out);
                 const peak = peakFullScale(wav);
                 const checks: Check[] = [
@@ -37,6 +39,11 @@ export function registerVerifyCommand(cli: Cli): void {
                     { name: 'sample-rate', ok: wav.readUInt32LE(24) === 44_100, detail: `${wav.readUInt32LE(24)} Hz` },
                     { name: 'render', ok: result.bytes > 44, detail: `${result.bytes} bytes (${result.family})` },
                     { name: 'audible', ok: peak > 0, detail: `peak ${peak.toFixed(3)} full scale` },
+                    {
+                        name: 'reproducible',
+                        ok: result.fingerprint === again.fingerprint,
+                        detail: result.fingerprint,
+                    },
                 ];
                 const ok = checks.every((check) => check.ok);
                 if (options.json === true) {
