@@ -8,7 +8,8 @@
   "cli.cmd.patterns": "列出鼓组节奏型预设",
   "cli.cmd.pattern": "渲染一个鼓组节奏型为 WAV（位置参数：<preset> <out.wav>）",
   "cli.cmd.version": "打印原生库版本",
-  "cli.cmd.verify": "渲染一个预设到临时 WAV 并检查容器、采样率与可听性（位置参数：<preset>）",
+  "cli.cmd.verify": "渲染一个预设到临时 WAV 并检查容器、采样率、可听性与可复现性（位置参数：<preset>，可选 --kind）",
+  "cli.opt.kind": "要校验的资产类型：sfx（默认）、instrument 或 pattern",
   "cli.opt.spec": "从 JSON spec 文件读取参数，而不是预设名",
   "cli.opt.json": "以 JSON 输出结果"
 }
