@@ -2,7 +2,7 @@
   "cli.intro": "open-sfx — 程序化音效库与命令行",
   "cli.cmd.list": "列出内置音效预设",
   "cli.cmd.render": "渲染一个预设为 WAV（位置参数：<preset> <out.wav>）",
-  "cli.cmd.pack": "把全部预设渲染到目录，并写含大小与指纹的 manifest.json（位置参数：<dir>）",
+  "cli.cmd.pack": "把某一类目录（音效、乐器或节奏型）全部渲染到目录，并写含大小与指纹的 manifest.json（位置参数：<dir>）",
   "cli.cmd.instruments": "列出可演奏乐器",
   "cli.cmd.instrument": "渲染一个乐器预设为 WAV（位置参数：<preset> <out.wav>）",
   "cli.cmd.patterns": "列出鼓组节奏型预设",
