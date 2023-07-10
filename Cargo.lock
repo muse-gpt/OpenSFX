@@ -3,6 +3,20 @@
 version = 4
 
 [[package]]
+name = "binding-com"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
+dependencies = [
+ "binding-macro",
+ "windows 0.61.3",
+]
+
+[[package]]
+name = "binding-macro"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
+
+[[package]]
 name = "bitflags"
 version = "2.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -36,7 +50,6 @@ dependencies = [
 [[package]]
 name = "geometry-types"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
 dependencies = [
  "serde",
 ]
@@ -66,7 +79,6 @@ dependencies = [
 [[package]]
 name = "media-codec"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
 dependencies = [
  "media-image",
  "media-types",
@@ -76,12 +88,17 @@ dependencies = [
 [[package]]
 name = "media-dsp"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
+
+[[package]]
+name = "media-harness"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "media-image"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
 dependencies = [
  "geometry-types",
  "serde",
@@ -90,9 +107,9 @@ dependencies = [
 [[package]]
 name = "media-render"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
 dependencies = [
  "media-codec",
+ "media-harness",
  "media-image",
  "media-synthesis",
  "media-types",
@@ -102,7 +119,6 @@ dependencies = [
 [[package]]
 name = "media-synthesis"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
 dependencies = [
  "media-dsp",
  "media-types",
@@ -112,7 +128,6 @@ dependencies = [
 [[package]]
 name = "media-types"
 version = "0.1.0"
-source = "git+https://github.com/oovm/boost.rs.git?rev=c4ad7e17499170b38df42847996cdfe55bf58d38#c4ad7e17499170b38df42847996cdfe55bf58d38"
 
 [[package]]
 name = "memchr"
@@ -431,23 +446,23 @@ checksum = "a2c754d6c33795a1c324727428e5a7dedb5b06195f9890bdbcba760d3e246563"
 
 [[package]]
 name = "wae"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
 dependencies = [
  "wae-audit",
+ "wae-harness",
+ "wae-installer",
  "wae-macros",
  "wae-napi",
  "wae-plugins",
- "wae-webview",
- "wae-webview-linux",
- "wae-webview-macos",
- "wae-webview-win32",
+ "wae-shell",
+ "webview",
 ]
 
 [[package]]
 name = "wae-audit"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
 dependencies = [
  "serde",
  "serde_json",
@@ -455,9 +470,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "wae-harness"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
+dependencies = [
+ "serde",
+ "serde_json",
+ "webview",
+ "webview-types",
+]
+
+[[package]]
+name = "wae-installer"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
+dependencies = [
+ "libloading",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "wae-macros"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -466,16 +502,18 @@ dependencies = [
 
 [[package]]
 name = "wae-napi"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
 dependencies = [
  "libloading",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
 name = "wae-plugins"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
 dependencies = [
  "serde",
  "serde_json",
@@ -483,37 +521,65 @@ dependencies = [
 ]
 
 [[package]]
-name = "wae-webview"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
-
-[[package]]
-name = "wae-webview-linux"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+name = "wae-shell"
+version = "0.0.6"
+source = "git+https://github.com/doki-land/wae-framework.git?rev=f92f818fde7174154d77a87b55a5e44b367034c9#f92f818fde7174154d77a87b55a5e44b367034c9"
 dependencies = [
- "libloading",
- "wae-webview",
+ "webview",
+ "windows 0.61.3",
 ]
 
 [[package]]
-name = "wae-webview-macos"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+name = "webview"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
 dependencies = [
+ "webview-linux",
+ "webview-macos",
+ "webview-types",
+ "webview-win32",
+]
+
+[[package]]
+name = "webview-linux"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
+dependencies = [
+ "binding-macro",
+ "libloading",
+ "webview-types",
+]
+
+[[package]]
+name = "webview-macos"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
+dependencies = [
+ "binding-macro",
  "objc2",
  "objc2-app-kit",
  "objc2-foundation",
  "objc2-web-kit",
- "wae-webview",
+ "webview-types",
 ]
 
 [[package]]
-name = "wae-webview-win32"
-version = "0.0.5"
-source = "git+https://github.com/doki-land/wae-framework.git?rev=66f5d003fec85e28503968fd0a6a271beef0f389#66f5d003fec85e28503968fd0a6a271beef0f389"
+name = "webview-types"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
 dependencies = [
- "wae-webview",
+ "serde_json",
+]
+
+[[package]]
+name = "webview-win32"
+version = "0.0.1"
+source = "git+https://github.com/oovm/boost-binding.rs.git?rev=e570c136b6eacf5635166883bdd63e925e25a9b3#e570c136b6eacf5635166883bdd63e925e25a9b3"
+dependencies = [
+ "binding-com",
+ "binding-macro",
+ "serde_json",
+ "webview-types",
  "webview2-com",
  "windows 0.61.3",
 ]
