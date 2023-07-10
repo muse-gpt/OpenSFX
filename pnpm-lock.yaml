@@ -21,9 +21,29 @@ importers:
         specifier: ^5.9.2
         version: 5.9.3
     optionalDependencies:
+      '@wae/open-sfx-darwin-arm64':
+        specifier: workspace:*
+        version: link:../open-sfx-darwin-arm64
+      '@wae/open-sfx-darwin-x64':
+        specifier: workspace:*
+        version: link:../open-sfx-darwin-x64
+      '@wae/open-sfx-linux-arm64':
+        specifier: workspace:*
+        version: link:../open-sfx-linux-arm64
+      '@wae/open-sfx-linux-x64':
+        specifier: workspace:*
+        version: link:../open-sfx-linux-x64
       '@wae/open-sfx-win32-x64':
         specifier: workspace:*
         version: link:../open-sfx-win32-x64
+
+  packages/open-sfx-darwin-arm64: {}
+
+  packages/open-sfx-darwin-x64: {}
+
+  packages/open-sfx-linux-arm64: {}
+
+  packages/open-sfx-linux-x64: {}
 
   packages/open-sfx-win32-x64: {}
 
