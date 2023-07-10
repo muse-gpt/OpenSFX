@@ -92,7 +92,7 @@ function hostTriple() {
 
 /** `OPEN_SFX_TARGET` selects an explicit Rust target triple. */
 export function resolveTarget() {
-    const triple = process.env.OPEN_SFX_TARGET ?? hostTriple();
+    const triple = process.env.OPEN_SFX_TARGET || hostTriple();
     const target = TARGETS[triple];
     if (!target) {
         throw new Error(
