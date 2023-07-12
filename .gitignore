@@ -6,3 +6,6 @@ out/
 dist/
 .idea/
 packages/*/*.node
+.env.placeholder.local
+# Nifty local cache
+.cache/

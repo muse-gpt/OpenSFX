@@ -10,5 +10,8 @@
         "typecheck": "pnpm --filter @wae/open-sfx run typecheck",
         "verify": "node scripts/verify-install.mjs",
         "pack": "pnpm run build && node packages/open-sfx/dist/cli/main.js pack ./out"
+    },
+    "devDependencies": {
+        "@doki-land/nifty": "^0.1.10"
     }
 }
