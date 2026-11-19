@@ -1,6 +1,6 @@
 {
     "name": "@wae/open-sfx-darwin-arm64",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "OpenSFX native addon for macOS Apple Silicon",
     "license": "Apache-2.0",
     "os": ["darwin"],
