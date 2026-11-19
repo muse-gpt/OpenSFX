@@ -228,9 +228,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Run from inside each package directory: pnpm --dir leaks the directory
+          # and command name as extra positional args to the npm it delegates to for
+          # provenance, and npm publish rejects them with EUSAGE.
           for short in win32-x64 linux-x64 linux-arm64 darwin-x64 darwin-arm64; do
-            pnpm --dir "packages/open-sfx-$short" publish --no-git-checks --access public --provenance
+            (cd "packages/open-sfx-$short" && pnpm publish --no-git-checks --access public --provenance)
           done
 
       - name: Publish main package to npm
-        run: pnpm --dir packages/open-sfx publish --no-git-checks --access public --provenance
+        run: (cd packages/open-sfx && pnpm publish --no-git-checks --access public --provenance)
